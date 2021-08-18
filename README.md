@@ -3,7 +3,8 @@ This project is an implementation of The Game of Life, a cellular automation dev
 # Executable version
 
 Made using [LÖVE](http://love2d.org/)  
-To run locally, install LÖVE, then run `<love.exe path> <project root path>/lua`  
+To run locally, install LÖVE, then run `<love.exe path> <project root path>/lua`
+
 This version allows you to:
 
 - Choose percentage of cells to start live
@@ -18,7 +19,8 @@ This version allows you to:
 # Web version
 
 The web version is made using [Typescript](https://www.typescriptlang.org/), [React](https://reactjs.org/), & [Sass](https://sass-lang.com/)  
-To run locally, install [npm](https://www.npmjs.com/get-npm), then follow the [Create React App instructions](CreateReactApp_README.md)  
+To run locally, install [npm](https://www.npmjs.com/get-npm), then follow the [Create React App instructions](CreateReactApp_README.md)
+
 This version has all the features of the executable version, as well as allowing you to:
 
 - Choose from a number of preset patterns

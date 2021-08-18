@@ -1,7 +1,5 @@
 {
   "name": "game-of-life",
-  "version": "0.1.0",
-  "private": true,
   "homepage": "https://James-Benson.github.io/game-of-life",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -12,12 +10,12 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
-    "gh-pages": "^3.1.0",
-    "node-sass": "^4.14.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3",
-    "typescript": "^3.7.5"
+    "gh-pages": "^3.2.3",
+    "react": "^16.14.0",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "sass": "^1.38.0",
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "predeploy": "npm run build",
