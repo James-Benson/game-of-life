@@ -103,14 +103,6 @@ const decompressCells = (size: number, decompressed: TGrid, row: number, counter
   return [decompressed, row, counter, currentCell]
 }
 
-export const copyText = (input: React.RefObject<HTMLInputElement>) => {
-  if (!input.current) return
-  navigator.clipboard.writeText('aaa')
-  // input.current.select()
-  // input.current.setSelectionRange(0, 99999)
-  // document.execCommand("copy")
-}
-
 export const patternList: IPatternCategory[] = [
   {
     name: 'Still lifes',
