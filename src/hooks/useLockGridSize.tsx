@@ -51,7 +51,9 @@ export function useLockGridSize(
         setOldGridSize(newGridSize)
         setOldCellSize(newCellSize)
       } catch (e) {
-        if (e.message !== 'Cannot lower this value further') throw e
+        if (e.message !== 'Cannot lower this value further') {
+          throw e
+        }
       }
     } else {
       setOldGridSize(gridSizeInput)

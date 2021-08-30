@@ -26,9 +26,11 @@ export function useWindowSize(delay: number): IDimensions {
 
   React.useEffect(() => {
     if (isPC) {
-      let timer: NodeJS.Timeout | undefined = undefined
+      let timer: NodeJS.Timeout
       const resizeListener = () => {
-        if (timer) clearTimeout(timer)
+        if (timer) {
+          clearTimeout(timer)
+        }
 
         timer = setTimeout(() => {
           setScreenSize({

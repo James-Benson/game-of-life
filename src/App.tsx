@@ -69,13 +69,17 @@ function App() {
   const [Dialog, openDialog] = useDialog()
   // Opens dialog containing information about the app
   const openAboutDialog = React.useCallback(() => {
-    if (isAnimating) toggleAnimation()
+    if (isAnimating) {
+      toggleAnimation()
+    }
     openDialog(<About />)
   }, [openDialog, isAnimating, toggleAnimation])
   // Opens dialog containing compressed grid string
   const [savedGridElementRef, copySavedGrid] = useCopyElementText()
   const openSaveGridDialog = React.useCallback(() => {
-    if (isAnimating) toggleAnimation()
+    if (isAnimating) {
+      toggleAnimation()
+    }
     openDialog(<>
       <p>Copy the below text, select 'Load Saved Grid' in the pattern dropdown, & paste into the input</p>
       <button onClick={copySavedGrid}>Copy pattern</button>
@@ -85,7 +89,9 @@ function App() {
   }, [openDialog, isAnimating, toggleAnimation, currentGrid, copySavedGrid, savedGridElementRef])
   // Opens dialog describing pattern category
   const openPatternInfoDialog = React.useCallback(() => {
-    if (isAnimating) toggleAnimation()
+    if (isAnimating) {
+      toggleAnimation()
+    }
     openDialog(<>{
       patternList.filter(category => Object.values(category.patterns).includes(patternInput))[0]?.description
     }</>)
@@ -148,11 +154,12 @@ function App() {
   const drawGrid = React.useCallback((grid?: TGrid) => {
     // Can use grid state, but can be passed a grid if grid state is not up to date
     grid = grid ?? currentGrid
-    if (!(canvasContext && grid?.[gridSize - 1])) return
-    canvasContext.clearRect(0, 0, gridSize * cellSize, gridSize * cellSize)
-    for (let x = 0; x < gridSize; x++) {
-      for (let y = 0; y < gridSize; y++) {
-        grid[x][y] && canvasContext.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
+    if (canvasContext && grid?.[gridSize - 1]) {
+      canvasContext.clearRect(0, 0, gridSize * cellSize, gridSize * cellSize)
+      for (let x = 0; x < gridSize; x++) {
+        for (let y = 0; y < gridSize; y++) {
+          grid[x][y] && canvasContext.fillRect(x * cellSize, y * cellSize, cellSize, cellSize)
+        }
       }
     }
   }, [canvasContext, gridSize, cellSize, currentGrid])
@@ -195,20 +202,21 @@ function App() {
 
   /** Flip state of cell when clicking on it */
   const toggleCell = React.useCallback((e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    if (!canvasRef.current || !currentGrid) return
-    const canvasRect = canvasRef.current.getBoundingClientRect()
-    const x = Math.floor((e.clientX - canvasRect.x) / cellSize)
-    const y = Math.floor((e.clientY - canvasRect.y) / cellSize)
-    tempPause()
-    const newGrid = cloneGrid(currentGrid)
-    newGrid[x][y] = !currentGrid[x][y]
-    setCurrentGrid(newGrid)
-    drawGrid(newGrid)
+    if (canvasRef.current && currentGrid) {
+      const canvasRect = canvasRef.current.getBoundingClientRect()
+      const x = Math.floor((e.clientX - canvasRect.x) / cellSize)
+      const y = Math.floor((e.clientY - canvasRect.y) / cellSize)
+      tempPause()
+      const newGrid = cloneGrid(currentGrid)
+      newGrid[x][y] = !currentGrid[x][y]
+      setCurrentGrid(newGrid)
+      drawGrid(newGrid)
+    }
   }, [cellSize, canvasRef, currentGrid, drawGrid, tempPause])
 
   /** Returns warning message if grid is too small for pattern, too big to fit on screen, or too big to fit on screen alongside controls */
   const sizeWarning = React.useMemo(() => {
-    if (!canvasRef.current) return
+    if (canvasRef.current) {
     const controlsHeight = canvasRef.current.getBoundingClientRect().y
 
     if (patternSize && gridSizeInput < patternSize) {
@@ -229,7 +237,8 @@ function App() {
         Recommended max grid size:<br />
         {screenWidth}*{screenHeight - controlsHeight}&nbsp;pixels
       </p>
-    } else return
+    }
+  }
   }, [canvasRef, screenWidth, screenHeight, predictedSize, gridSizeInput, patternSize])
 
   return (<>
