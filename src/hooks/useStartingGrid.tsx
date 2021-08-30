@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from "react"
 
-import { TGrid } from '../utils'
+import { TGrid } from "../utils"
 
 /** Creates starting grid on app load */
 export function useStartingGrid(
@@ -12,7 +12,7 @@ export function useStartingGrid(
   currentGrid: TGrid,
   newSim: () => void,
   setGridSizeInput: (value: React.SetStateAction<number>) => void
-) {
+): void {
   React.useEffect(() => {
     if (canvasRef.current && !gridSizeInput) {
       const controlsHeight = canvasRef.current.getBoundingClientRect().y

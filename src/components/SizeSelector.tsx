@@ -1,7 +1,7 @@
-import * as React from 'react';
+import * as React from "react"
 
-import { useInputControl } from '../hooks/useInputControl';
-import { Marker } from './Marker';
+import { useInputControl } from "../hooks/useInputControl"
+import { Marker } from "./Marker"
 
 interface ISizeSelectorProps {
   gridSize: number
@@ -14,7 +14,9 @@ interface ISizeSelectorProps {
 
 export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
   const [gridLockSizeInput, setLockGridSizeInput] = React.useState(false)
-  const [gridPixelSize, setGridPixelSize] = React.useState(props.gridSizeInput * props.cellSizeInput)
+  const [gridPixelSize, setGridPixelSize] = React.useState(
+    props.gridSizeInput * props.cellSizeInput
+  )
 
   const gridPixelSizeFactors = React.useMemo(() => {
     if (gridLockSizeInput) {
@@ -29,7 +31,7 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
     }
   }, [gridLockSizeInput, gridPixelSize])
 
-  // When gridSizeInput or cellSizeInput change, change the othe such that their product is the original grid size in pixels
+  // When gridSizeInput or cellSizeInput change, change the other such that their product is the original grid size in pixels
   React.useEffect(() => {
     if (gridLockSizeInput) {
       const newCellSize = gridPixelSize / props.gridSizeInput
@@ -49,34 +51,51 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
     }
   }, [props.cellSizeInput])
 
-  const gridSizeControl = useInputControl(props.gridSizeInput, props.setGridSizeInput)
-  const cellSizeControl = useInputControl(props.cellSizeInput, props.setCellSizeInput)
-  const lockGridSizeControl = useInputControl(gridLockSizeInput, setLockGridSizeInput)
+  const gridSizeControl = useInputControl(
+    props.gridSizeInput,
+    props.setGridSizeInput
+  )
+  const cellSizeControl = useInputControl(
+    props.cellSizeInput,
+    props.setCellSizeInput
+  )
+  const lockGridSizeControl = useInputControl(
+    gridLockSizeInput,
+    setLockGridSizeInput
+  )
 
   return (
     <>
-      <label htmlFor='gridSize'>Width/height of grid in cells</label>
-      {gridLockSizeInput ?
-        <select id='gridSize' {...gridSizeControl}>
-          {gridPixelSizeFactors?.map(factor => <option key={'grid' + factor} value={factor}>{factor}</option>)}
+      <label htmlFor="gridSize">Width/height of grid in cells</label>
+      {gridLockSizeInput ? (
+        <select id="gridSize" {...gridSizeControl}>
+          {gridPixelSizeFactors?.map(factor => (
+            <option key={`grid${factor}`} value={factor}>
+              {factor}
+            </option>
+          ))}
         </select>
-        :
-        <input type='number' id='gridSize' {...gridSizeControl} />
-      }
-      <Marker show={props.gridSizeInput !== props.gridSize} symbol='*' />
+      ) : (
+        <input type="number" id="gridSize" {...gridSizeControl} />
+      )}
+      <Marker show={props.gridSizeInput !== props.gridSize} symbol="*" />
 
-      <label htmlFor='cellSize'>Width/height of cells in pixels</label>
-      {gridLockSizeInput ?
-        <select id='cellSize' {...cellSizeControl}>
-          {gridPixelSizeFactors?.map(factor => <option key={'cell' + factor} value={factor}>{factor}</option>)}
+      <label htmlFor="cellSize">Width/height of cells in pixels</label>
+      {gridLockSizeInput ? (
+        <select id="cellSize" {...cellSizeControl}>
+          {gridPixelSizeFactors?.map(factor => (
+            <option key={`cell${factor}`} value={factor}>
+              {factor}
+            </option>
+          ))}
         </select>
-        :
-        <input type='number' id='cellSize' {...cellSizeControl} />
-      }
-      <Marker show={props.cellSizeInput !== props.cellSize} symbol='†' />
+      ) : (
+        <input type="number" id="cellSize" {...cellSizeControl} />
+      )}
+      <Marker show={props.cellSizeInput !== props.cellSize} symbol="†" />
 
-      <label htmlFor='lockGridSize'>Lock resulting grid size</label>
-      <input type='checkbox' id='lockGridSize' {...lockGridSizeControl} />
+      <label htmlFor="lockGridSize">Lock resulting grid size</label>
+      <input type="checkbox" id="lockGridSize" {...lockGridSizeControl} />
     </>
   )
 }

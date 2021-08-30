@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react"
 
 /** Updates current game with cell size & fps from inputs */
 export function useUpdateGame(
@@ -9,8 +9,8 @@ export function useUpdateGame(
   setFps: (value: React.SetStateAction<number>) => void,
   fpsInput: number,
   tempPause: () => void,
-  drawGrid: () => void,
-) {
+  drawGrid: () => void
+): () => void {
   const updateGame = React.useCallback(() => {
     tempPause()
     setCellSize(cellSizeInput)
@@ -19,7 +19,7 @@ export function useUpdateGame(
 
   React.useEffect(() => {
     drawGrid()
-  }, [cellSize, fps])
+  }, [cellSize, drawGrid, fps])
 
   return updateGame
 }

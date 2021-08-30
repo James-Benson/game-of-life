@@ -1,7 +1,7 @@
-import * as React from 'react';
+import * as React from "react"
 
-import { TDep } from './useNewState';
-import { TGrid } from '../utils';
+import { TDep } from "./useNewState"
+import { TGrid } from "../utils"
 
 /** Creates new game based on inputs */
 export function useNewGame(
@@ -24,7 +24,7 @@ export function useNewGame(
   createNewGrid: () => TGrid,
   setCurrentGrid: (value: React.SetStateAction<TGrid>) => void,
   drawGrid: (grid?: TGrid | undefined) => void
-) {
+): () => void {
   const newGame = React.useCallback(() => {
     setPattern(patternInput)
     setCustomPattern(customPatternInput)
@@ -32,7 +32,20 @@ export function useNewGame(
     setGridSize(gridSizeInput)
     setCellSize(cellSizeInput)
     setFps(fpsInput)
-  }, [patternInput, customPatternInput, oddsInput, gridSizeInput, cellSizeInput, fpsInput, setOdds, setGridSize, setCellSize, setCustomPattern, setFps, setPattern])
+  }, [
+    patternInput,
+    customPatternInput,
+    oddsInput,
+    gridSizeInput,
+    cellSizeInput,
+    fpsInput,
+    setOdds,
+    setGridSize,
+    setCellSize,
+    setCustomPattern,
+    setFps,
+    setPattern,
+  ])
 
   React.useEffect(() => {
     if (isAnimating) {
