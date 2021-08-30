@@ -38,9 +38,9 @@ export function useNewGame(
     if (isAnimating) {
       toggleAnimation()
     }
-    // Passing new grid to drawGrid, since new grid state set by initGrid() is not accessible yet
     const newGrid = createNewGrid()
     setCurrentGrid(newGrid)
+    // Passing new grid to drawGrid, since new grid state set by setCurrentGrid() is not accessible yet
     drawGrid(newGrid)
     // Using dependencies from useNewState, to make a new grid even if the grid properties haven't changed
   }, [oddsDep, gridSizeDep])

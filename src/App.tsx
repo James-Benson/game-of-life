@@ -28,7 +28,7 @@ function App() {
   // State for checking size of grid relative to size of screen
   const { screenWidth, screenHeight } = useWindowSize(200)
 
-  // Unapplied grid properties in inputs
+  // Grid property input states
   const [oddsInput, setOddsInput] = React.useState(50)
   const [cellSizeInput, setCellSizeInput] = React.useState(10)
   const [gridSizeInput, setGridSizeInput] = React.useState(0)
