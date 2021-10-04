@@ -24,14 +24,14 @@ export type TControl<T extends TState> = T extends boolean
  * Creates control to bind an <input> or <select> to a piece of react state
  * Numbers will be non-negative integers
  *
- * @param state First part of React.useState return
- * @param setState Second part of React.useState return
- * @returns Control to be spread onto <input> or <select>
+ * @param initialState Initial value of <input> or <select>
+ * @returns Control to be spread onto <input> or <select>, & result of React.useState it will be bound to
  */
 export function useInputControl<T extends TState>(
-  state: T,
-  setState: React.Dispatch<React.SetStateAction<T>>
-): TControl<T> {
+  initialState: T | (() => T)
+): [TControl<T>, T, React.Dispatch<React.SetStateAction<T>>] {
+  const [state, setState] = React.useState(initialState)
+
   const onChange: TOnChange<T> = React.useCallback(
     (event: React.ChangeEvent<TElement<T>>) => {
       switch (typeof state) {
@@ -59,5 +59,5 @@ export function useInputControl<T extends TState>(
     }
   }, [onChange, state])
 
-  return control
+  return [control, state, setState]
 }

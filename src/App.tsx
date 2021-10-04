@@ -37,12 +37,15 @@ function App(): JSX.Element {
   const { screenWidth, screenHeight } = useWindowSize(200)
 
   // Grid property input states
-  const [oddsInput, setOddsInput] = React.useState(50)
-  const [cellSizeInput, setCellSizeInput] = React.useState(10)
-  const [gridSizeInput, setGridSizeInput] = React.useState(0)
-  const [fpsInput, setFpsInput] = React.useState(30)
-  const [patternInput, setPatternInput] = React.useState("Random")
-  const [customPatternInput, setCustomPatternInput] = React.useState("")
+  const [oddsInputControl, oddsInput] = useInputControl<number>(50)
+  const [cellSizeInputControl, cellSizeInput, setCellSizeInput] =
+    useInputControl<number>(10)
+  const [gridSizeInputControl, gridSizeInput, setGridSizeInput] =
+    useInputControl<number>(0)
+  const [fpsInputControl, fpsInput] = useInputControl<number>(30)
+  const [patternInputControl, patternInput] = useInputControl<string>("Random")
+  const [customPatternInputControl, customPatternInput] =
+    useInputControl<string>("")
 
   // State for checking grid will be smaller than screen
   const predictedSize = React.useMemo(
@@ -333,13 +336,13 @@ function App(): JSX.Element {
                 {...{
                   pattern,
                   patternInput,
-                  setPatternInput,
+                  patternInputControl,
                   customPattern,
                   customPatternInput,
-                  setCustomPatternInput,
+                  customPatternInputControl,
                   odds,
                   oddsInput,
-                  setOddsInput,
+                  oddsInputControl,
                   openPatternInfoDialog,
                 }}
               />
@@ -350,9 +353,11 @@ function App(): JSX.Element {
                 {...{
                   gridSize,
                   gridSizeInput,
+                  gridSizeInputControl,
                   setGridSizeInput,
                   cellSize,
                   cellSizeInput,
+                  cellSizeInputControl,
                   setCellSizeInput,
                 }}
               />
@@ -360,11 +365,7 @@ function App(): JSX.Element {
 
             <div className="control-container">
               <label htmlFor="fps">Cycles per second</label>
-              <input
-                type="number"
-                id="fps"
-                {...useInputControl(fpsInput, setFpsInput)}
-              />
+              <input type="number" id="fps" {...fpsInputControl} />
               <Marker show={fpsInput !== fps} symbol="†" />
             </div>
           </div>

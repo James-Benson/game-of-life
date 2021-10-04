@@ -1,19 +1,22 @@
 import * as React from "react"
 
-import { useInputControl } from "../hooks/useInputControl"
+import { TControl, useInputControl } from "../hooks/useInputControl"
 import { Marker } from "./Marker"
 
 interface ISizeSelectorProps {
   gridSize: number
   gridSizeInput: number
+  gridSizeInputControl: TControl<number>
   setGridSizeInput: React.Dispatch<React.SetStateAction<number>>
   cellSize: number
   cellSizeInput: number
+  cellSizeInputControl: TControl<number>
   setCellSizeInput: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
-  const [gridLockSizeInput, setLockGridSizeInput] = React.useState(false)
+  const [lockGridSizeInputControl, gridLockSizeInput] =
+    useInputControl<boolean>(false)
   const [gridPixelSize, setGridPixelSize] = React.useState(
     props.gridSizeInput * props.cellSizeInput
   )
@@ -51,24 +54,11 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
     }
   }, [props.cellSizeInput])
 
-  const gridSizeControl = useInputControl(
-    props.gridSizeInput,
-    props.setGridSizeInput
-  )
-  const cellSizeControl = useInputControl(
-    props.cellSizeInput,
-    props.setCellSizeInput
-  )
-  const lockGridSizeControl = useInputControl(
-    gridLockSizeInput,
-    setLockGridSizeInput
-  )
-
   return (
     <>
       <label htmlFor="gridSize">Width/height of grid in cells</label>
       {gridLockSizeInput ? (
-        <select id="gridSize" {...gridSizeControl}>
+        <select id="gridSize" {...props.gridSizeInputControl}>
           {gridPixelSizeFactors?.map(factor => (
             <option key={`grid${factor}`} value={factor}>
               {factor}
@@ -76,13 +66,13 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
           ))}
         </select>
       ) : (
-        <input type="number" id="gridSize" {...gridSizeControl} />
+        <input type="number" id="gridSize" {...props.gridSizeInputControl} />
       )}
       <Marker show={props.gridSizeInput !== props.gridSize} symbol="*" />
 
       <label htmlFor="cellSize">Width/height of cells in pixels</label>
       {gridLockSizeInput ? (
-        <select id="cellSize" {...cellSizeControl}>
+        <select id="cellSize" {...props.cellSizeInputControl}>
           {gridPixelSizeFactors?.map(factor => (
             <option key={`cell${factor}`} value={factor}>
               {factor}
@@ -90,12 +80,12 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
           ))}
         </select>
       ) : (
-        <input type="number" id="cellSize" {...cellSizeControl} />
+        <input type="number" id="cellSize" {...props.cellSizeInputControl} />
       )}
       <Marker show={props.cellSizeInput !== props.cellSize} symbol="†" />
 
       <label htmlFor="lockGridSize">Lock resulting grid size</label>
-      <input type="checkbox" id="lockGridSize" {...lockGridSizeControl} />
+      <input type="checkbox" id="lockGridSize" {...lockGridSizeInputControl} />
     </>
   )
 }
