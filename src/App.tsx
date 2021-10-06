@@ -37,15 +37,14 @@ function App(): JSX.Element {
   const { screenWidth, screenHeight } = useWindowSize(200)
 
   // Grid property input states
-  const [oddsInputControl, oddsInput] = useInputControl<number>(50)
+  const [oddsInputControl, oddsInput] = useInputControl(50)
   const [cellSizeInputControl, cellSizeInput, setCellSizeInput] =
-    useInputControl<number>(10)
+    useInputControl(10)
   const [gridSizeInputControl, gridSizeInput, setGridSizeInput] =
-    useInputControl<number>(0)
-  const [fpsInputControl, fpsInput] = useInputControl<number>(30)
-  const [patternInputControl, patternInput] = useInputControl<string>("Random")
-  const [customPatternInputControl, customPatternInput] =
-    useInputControl<string>("")
+    useInputControl(0)
+  const [fpsInputControl, fpsInput] = useInputControl(30)
+  const [patternInputControl, patternInput] = useInputControl("Random")
+  const [customPatternInputControl, customPatternInput] = useInputControl("")
 
   // State for checking grid will be smaller than screen
   const predictedSize = React.useMemo(

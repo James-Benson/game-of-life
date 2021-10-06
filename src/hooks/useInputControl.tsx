@@ -1,6 +1,6 @@
 import * as React from "react"
 
-// Type assertions used due to type narrowing not applying for type variables (exlanation here: https://stackoverflow.com/a/60476282)
+// Generic type variables cannot be narrowed, so type assertions are used (exlanation here: https://stackoverflow.com/a/60476282)
 
 /** Type of state <input> or <select> is being bound to */
 type TState = boolean | number | string
@@ -27,6 +27,15 @@ export type TControl<T extends TState> = T extends boolean
  * @param initialState Initial value of <input> or <select>
  * @returns Control to be spread onto <input> or <select>, & result of React.useState it will be bound to
  */
+export function useInputControl(
+  initialState: boolean | (() => boolean)
+): [TControl<boolean>, boolean, React.Dispatch<React.SetStateAction<boolean>>]
+export function useInputControl(
+  initialState: number | (() => number)
+): [TControl<number>, number, React.Dispatch<React.SetStateAction<number>>]
+export function useInputControl(
+  initialState: string | (() => string)
+): [TControl<string>, string, React.Dispatch<React.SetStateAction<string>>]
 export function useInputControl<T extends TState>(
   initialState: T | (() => T)
 ): [TControl<T>, T, React.Dispatch<React.SetStateAction<T>>] {

@@ -15,8 +15,7 @@ interface ISizeSelectorProps {
 }
 
 export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
-  const [lockGridSizeInputControl, gridLockSizeInput] =
-    useInputControl<boolean>(false)
+  const [lockGridSizeInputControl, gridLockSizeInput] = useInputControl(false)
   const [gridPixelSize, setGridPixelSize] = React.useState(
     props.gridSizeInput * props.cellSizeInput
   )
