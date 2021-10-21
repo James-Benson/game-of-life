@@ -1,16 +1,19 @@
 import * as React from "react"
+import { GameContext } from "../gameContext"
 
 /** Updates current game with cell size & fps from inputs */
-export function useUpdateGame(
-  cellSize: number,
-  setCellSize: (value: React.SetStateAction<number>) => void,
-  cellSizeInput: number,
-  fps: number,
-  setFps: (value: React.SetStateAction<number>) => void,
-  fpsInput: number,
-  tempPause: () => void,
-  drawGrid: () => void
-): () => void {
+export function useUpdateGame(): () => void {
+  const {
+    cellSizeInput,
+    fpsInput,
+    cellSize,
+    setCellSize,
+    fps,
+    setFps,
+    tempPause,
+    drawGrid,
+  } = React.useContext(GameContext)
+
   const updateGame = React.useCallback(() => {
     tempPause()
     setCellSize(cellSizeInput)

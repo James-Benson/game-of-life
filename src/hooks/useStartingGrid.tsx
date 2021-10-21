@@ -1,18 +1,21 @@
 import * as React from "react"
-
-import { TGrid } from "../utils"
+import { GameContext } from "../gameContext"
+import { useNewGame } from "./useNewGame"
 
 /** Creates starting grid on app load */
-export function useStartingGrid(
-  canvasRef: React.MutableRefObject<HTMLCanvasElement | undefined>,
-  gridSizeInput: number,
-  screenWidth: number,
-  screenHeight: number,
-  cellSizeInput: number,
-  currentGrid: TGrid,
-  newSim: () => void,
-  setGridSizeInput: (value: React.SetStateAction<number>) => void
-): void {
+export function useStartingGrid(): void {
+  const {
+    canvasRef,
+    screenWidth,
+    screenHeight,
+    cellSizeInput,
+    gridSizeInput,
+    setGridSizeInput,
+    currentGrid,
+  } = React.useContext(GameContext)
+
+  const newGame = useNewGame()
+
   React.useEffect(() => {
     if (canvasRef.current && !gridSizeInput) {
       const controlsHeight = canvasRef.current.getBoundingClientRect().y
@@ -23,7 +26,7 @@ export function useStartingGrid(
 
   React.useEffect(() => {
     if (!currentGrid.length && gridSizeInput) {
-      newSim()
+      newGame()
     }
   }, [gridSizeInput])
 }

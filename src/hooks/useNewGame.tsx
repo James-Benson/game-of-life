@@ -1,30 +1,31 @@
 import * as React from "react"
 
-import { TDep } from "./useNewState"
-import { TGrid } from "../utils"
+import { GameContext } from "../gameContext"
+import { useCreateNewGrid } from "./useCreateNewGrid"
 
 /** Creates new game based on inputs */
-export function useNewGame(
-  patternInput: string,
-  setPattern: (value: React.SetStateAction<string>) => void,
-  customPatternInput: string,
-  setCustomPattern: (value: React.SetStateAction<string>) => void,
-  oddsInput: number,
-  setOdds: (newState: number) => void,
-  oddsDep: TDep<number>,
-  gridSizeInput: number,
-  setGridSize: (newState: number) => void,
-  gridSizeDep: TDep<number>,
-  cellSizeInput: number,
-  setCellSize: (value: React.SetStateAction<number>) => void,
-  fpsInput: number,
-  setFps: (value: React.SetStateAction<number>) => void,
-  isAnimating: boolean,
-  toggleAnimation: () => void,
-  createNewGrid: () => TGrid,
-  setCurrentGrid: (value: React.SetStateAction<TGrid>) => void,
-  drawGrid: (grid?: TGrid | undefined) => void
-): () => void {
+export function useNewGame(): () => void {
+  const {
+    oddsInput,
+    cellSizeInput,
+    gridSizeInput,
+    fpsInput,
+    patternInput,
+    customPatternInput,
+    setCurrentGrid,
+    oddsDep,
+    setOdds,
+    gridSizeDep,
+    setGridSize,
+    setCellSize,
+    setFps,
+    setPattern,
+    setCustomPattern,
+    toggleAnimation,
+    isAnimating,
+    drawGrid,
+  } = React.useContext(GameContext)
+
   const newGame = React.useCallback(() => {
     setPattern(patternInput)
     setCustomPattern(customPatternInput)
@@ -47,6 +48,9 @@ export function useNewGame(
     setPattern,
   ])
 
+  const createNewGrid = useCreateNewGrid()
+
+  // Currently works by the fact that oddsDep & gridSizeDep only change when a new game is created (by user interaction, or when the site loads)
   React.useEffect(() => {
     if (isAnimating) {
       toggleAnimation()

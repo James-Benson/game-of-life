@@ -1,23 +1,24 @@
 import * as React from "react"
+import { GameContext } from "../gameContext"
 
-import { TControl, useInputControl } from "../hooks/useInputControl"
+import { useInputControl } from "../hooks/useInputControl"
 import { Marker } from "./Marker"
 
-interface ISizeSelectorProps {
-  gridSize: number
-  gridSizeInput: number
-  gridSizeInputControl: TControl<number>
-  setGridSizeInput: React.Dispatch<React.SetStateAction<number>>
-  cellSize: number
-  cellSizeInput: number
-  cellSizeInputControl: TControl<number>
-  setCellSizeInput: React.Dispatch<React.SetStateAction<number>>
-}
+export const SizeSelector: React.FC = () => {
+  const {
+    cellSizeInputControl,
+    cellSizeInput,
+    setCellSizeInput,
+    gridSizeInputControl,
+    gridSizeInput,
+    setGridSizeInput,
+    gridSize,
+    cellSize,
+  } = React.useContext(GameContext)
 
-export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
   const [lockGridSizeInputControl, gridLockSizeInput] = useInputControl(false)
   const [gridPixelSize, setGridPixelSize] = React.useState(
-    props.gridSizeInput * props.cellSizeInput
+    gridSizeInput * cellSizeInput
   )
 
   const gridPixelSizeFactors = React.useMemo(() => {
@@ -36,28 +37,28 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
   // When gridSizeInput or cellSizeInput change, change the other such that their product is the original grid size in pixels
   React.useEffect(() => {
     if (gridLockSizeInput) {
-      const newCellSize = gridPixelSize / props.gridSizeInput
-      props.setCellSizeInput(newCellSize)
-      setGridPixelSize(newCellSize * props.gridSizeInput)
+      const newCellSize = gridPixelSize / gridSizeInput
+      setCellSizeInput(newCellSize)
+      setGridPixelSize(newCellSize * gridSizeInput)
     } else {
-      setGridPixelSize(props.gridSizeInput * props.cellSizeInput)
+      setGridPixelSize(gridSizeInput * cellSizeInput)
     }
-  }, [props.gridSizeInput])
+  }, [gridSizeInput])
   React.useEffect(() => {
     if (gridLockSizeInput) {
-      const newGridSize = gridPixelSize / props.cellSizeInput
-      props.setGridSizeInput(newGridSize)
-      setGridPixelSize(newGridSize * props.cellSizeInput)
+      const newGridSize = gridPixelSize / cellSizeInput
+      setGridSizeInput(newGridSize)
+      setGridPixelSize(newGridSize * cellSizeInput)
     } else {
-      setGridPixelSize(props.gridSizeInput * props.cellSizeInput)
+      setGridPixelSize(gridSizeInput * cellSizeInput)
     }
-  }, [props.cellSizeInput])
+  }, [cellSizeInput])
 
   return (
     <>
       <label htmlFor="gridSize">Width/height of grid in cells</label>
       {gridLockSizeInput ? (
-        <select id="gridSize" {...props.gridSizeInputControl}>
+        <select id="gridSize" {...gridSizeInputControl}>
           {gridPixelSizeFactors?.map(factor => (
             <option key={`grid${factor}`} value={factor}>
               {factor}
@@ -65,13 +66,13 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
           ))}
         </select>
       ) : (
-        <input type="number" id="gridSize" {...props.gridSizeInputControl} />
+        <input type="number" id="gridSize" {...gridSizeInputControl} />
       )}
-      <Marker show={props.gridSizeInput !== props.gridSize} symbol="*" />
+      <Marker show={gridSizeInput !== gridSize} symbol="*" />
 
       <label htmlFor="cellSize">Width/height of cells in pixels</label>
       {gridLockSizeInput ? (
-        <select id="cellSize" {...props.cellSizeInputControl}>
+        <select id="cellSize" {...cellSizeInputControl}>
           {gridPixelSizeFactors?.map(factor => (
             <option key={`cell${factor}`} value={factor}>
               {factor}
@@ -79,9 +80,9 @@ export const SizeSelector: React.FC<ISizeSelectorProps> = props => {
           ))}
         </select>
       ) : (
-        <input type="number" id="cellSize" {...props.cellSizeInputControl} />
+        <input type="number" id="cellSize" {...cellSizeInputControl} />
       )}
-      <Marker show={props.cellSizeInput !== props.cellSize} symbol="†" />
+      <Marker show={cellSizeInput !== cellSize} symbol="†" />
 
       <label htmlFor="lockGridSize">Lock resulting grid size</label>
       <input type="checkbox" id="lockGridSize" {...lockGridSizeInputControl} />

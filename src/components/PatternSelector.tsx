@@ -1,35 +1,38 @@
 import * as React from "react"
-import { TControl } from "../hooks/useInputControl"
+import { GameContext } from "../gameContext"
 import { patternList } from "../utils"
 import { Marker } from "./Marker"
 
 interface IPatternSelector {
-  pattern: string
-  patternInput: string
-  patternInputControl: TControl<string>
-  customPattern: string
-  customPatternInput: string
-  customPatternInputControl: TControl<string>
-  odds: number
-  oddsInput: number
-  oddsInputControl: TControl<number>
   openPatternInfoDialog: () => void
 }
 
 export const PatternSelector: React.FC<IPatternSelector> = props => {
+  const {
+    oddsInputControl,
+    oddsInput,
+    patternInputControl,
+    patternInput,
+    customPatternInputControl,
+    customPatternInput,
+    odds,
+    pattern,
+    customPattern,
+  } = React.useContext(GameContext)
+
   const info = React.useMemo(() => {
     let patternSize
-    switch (props.patternInput) {
+    switch (patternInput) {
       case "Random":
         return (
           <>
             <label htmlFor="odds">Cells starting live (%)</label>
-            <input type="number" id="odds" {...props.oddsInputControl} />
-            <Marker show={props.oddsInput !== props.odds} symbol="*" />
+            <input type="number" id="odds" {...oddsInputControl} />
+            <Marker show={oddsInput !== odds} symbol="*" />
           </>
         )
       case "Load":
-        patternSize = parseInt(props.customPatternInput)
+        patternSize = parseInt(customPatternInput)
         return (
           <>
             <label htmlFor="customPattern">
@@ -40,16 +43,13 @@ export const PatternSelector: React.FC<IPatternSelector> = props => {
             <input
               type="string"
               id="customPattern"
-              {...props.customPatternInputControl}
+              {...customPatternInputControl}
             />
-            <Marker
-              show={props.customPatternInput !== props.customPattern}
-              symbol="*"
-            />
+            <Marker show={customPatternInput !== customPattern} symbol="*" />
           </>
         )
       default:
-        patternSize = parseInt(props.patternInput)
+        patternSize = parseInt(patternInput)
         return (
           <>
             <span>Min grid width: {patternSize} cells</span>
@@ -58,21 +58,21 @@ export const PatternSelector: React.FC<IPatternSelector> = props => {
         )
     }
   }, [
-    props.customPattern,
-    props.customPatternInput,
-    props.customPatternInputControl,
-    props.odds,
-    props.oddsInput,
-    props.oddsInputControl,
+    customPattern,
+    customPatternInput,
+    customPatternInputControl,
+    odds,
+    oddsInput,
+    oddsInputControl,
+    patternInput,
     props.openPatternInfoDialog,
-    props.patternInput,
   ])
 
   return (
     <>
       <label htmlFor="pattern">Choose pattern</label>
-      <select id="pattern" {...props.patternInputControl}>
-        {props.patternInput === "" && (
+      <select id="pattern" {...patternInputControl}>
+        {patternInput === "" && (
           <option value="" disabled>
             Select pattern
           </option>
@@ -91,7 +91,7 @@ export const PatternSelector: React.FC<IPatternSelector> = props => {
           )),
         ])}
       </select>
-      <Marker show={props.pattern !== props.patternInput} symbol="*" />
+      <Marker show={pattern !== patternInput} symbol="*" />
       {info}
     </>
   )

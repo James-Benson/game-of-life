@@ -3,10 +3,13 @@ import ReactDOM from "react-dom"
 import "./styles/index.scss"
 import App from "./App"
 import * as serviceWorker from "./serviceWorker"
+import { GameContextProvider } from "./gameContext"
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GameContextProvider>
+      <App />
+    </GameContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 )
