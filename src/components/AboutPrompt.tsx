@@ -1,13 +1,16 @@
 import * as React from "react"
+import { GameContext } from "../gameContext"
+import { About } from "./About"
+import { Dialog } from "./Dialog"
 
-interface IAboutPromptProps {
-  openAboutDialog: () => void
-}
+export const AboutPrompt: React.FC = () => {
+  const { pauseFirst } = React.useContext(GameContext)
 
-export const AboutPrompt: React.FC<IAboutPromptProps> = props => {
   const [showPrompt, setShowPrompt] = React.useState(
     localStorage.getItem("promptShown") !== "true"
   )
+
+  const [showAboutDialog, setShowAboutDialog] = React.useState(false)
 
   const hidePrompt = React.useCallback(() => {
     localStorage.setItem("promptShown", "true")
@@ -16,11 +19,17 @@ export const AboutPrompt: React.FC<IAboutPromptProps> = props => {
 
   const open = React.useCallback(() => {
     hidePrompt()
-    props.openAboutDialog()
-  }, [hidePrompt, props])
+    pauseFirst(() => setShowAboutDialog(true))
+  }, [hidePrompt, pauseFirst])
 
   return (
     <>
+      <Dialog
+        closeDialog={() => setShowAboutDialog(false)}
+        showDialog={showAboutDialog}
+      >
+        <About />
+      </Dialog>
       <div
         className={`about-button-wrapper ${showPrompt ? "show-prompt" : ""}`}
       >

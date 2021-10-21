@@ -1,13 +1,10 @@
 import * as React from "react"
 import { GameContext } from "../gameContext"
 import { patternList } from "../utils"
+import { Dialog } from "./Dialog"
 import { Marker } from "./Marker"
 
-interface IPatternSelector {
-  openPatternInfoDialog: () => void
-}
-
-export const PatternSelector: React.FC<IPatternSelector> = props => {
+export const PatternSelector: React.FC = () => {
   const {
     oddsInputControl,
     oddsInput,
@@ -18,7 +15,15 @@ export const PatternSelector: React.FC<IPatternSelector> = props => {
     odds,
     pattern,
     customPattern,
+    pauseFirst,
   } = React.useContext(GameContext)
+
+  const [showCategoryDescriptionDialog, setShowCategoryDescriptionDialog] =
+    React.useState(false)
+
+  const openPatternInfoDialog = React.useCallback(() => {
+    pauseFirst(() => setShowCategoryDescriptionDialog(true))
+  }, [pauseFirst])
 
   const info = React.useMemo(() => {
     let patternSize
@@ -53,7 +58,7 @@ export const PatternSelector: React.FC<IPatternSelector> = props => {
         return (
           <>
             <span>Min grid width: {patternSize} cells</span>
-            <button onClick={props.openPatternInfoDialog}>Pattern info</button>
+            <button onClick={openPatternInfoDialog}>Pattern info</button>
           </>
         )
     }
@@ -65,11 +70,25 @@ export const PatternSelector: React.FC<IPatternSelector> = props => {
     oddsInput,
     oddsInputControl,
     patternInput,
-    props.openPatternInfoDialog,
+    openPatternInfoDialog,
   ])
+
+  const categoryDescription = React.useMemo(
+    () =>
+      patternList.filter(category =>
+        Object.values(category.patterns).includes(patternInput)
+      )[0]?.description,
+    [patternInput]
+  )
 
   return (
     <>
+      <Dialog
+        closeDialog={() => setShowCategoryDescriptionDialog(false)}
+        showDialog={showCategoryDescriptionDialog}
+      >
+        {categoryDescription}
+      </Dialog>
       <label htmlFor="pattern">Choose pattern</label>
       <select id="pattern" {...patternInputControl}>
         {patternInput === "" && (

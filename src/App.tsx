@@ -10,10 +10,8 @@ import { SizeSelector } from "./components/SizeSelector"
 import { GameContext } from "./gameContext"
 import { useToggleCell } from "./hooks/useToggleCell"
 import { SizeWarning } from "./components/SizeWarning"
-import { About } from "./components/About"
 import { Dialog } from "./components/Dialog"
 import { SavedGrid } from "./components/SavedGrid"
-import { patternList } from "./utils"
 
 function App(): JSX.Element {
   const {
@@ -21,13 +19,13 @@ function App(): JSX.Element {
     setCanvasContext,
     fpsInputControl,
     fpsInput,
-    patternInput,
     gridSize,
     cellSize,
     fps,
     predictedSize,
     toggleAnimation,
     isAnimating,
+    pauseFirst,
   } = React.useContext(GameContext)
 
   // Canvas properties
@@ -51,64 +49,27 @@ function App(): JSX.Element {
   /** Flip state of cell when clicking on it */
   const toggleCell = useToggleCell()
 
-  /** Pauses game, then runs a given function */
-  const pauseFirst = React.useCallback(
-    (callback: () => void) => {
-      if (isAnimating) {
-        toggleAnimation()
-      }
-      callback()
-    },
-    [isAnimating, toggleAnimation]
-  )
-
   // Dialog controls
-  const [showAboutDialog, setShowAboutDialog] = React.useState(false)
   const [showSavedGridDialog, setShowSavedGridDialog] = React.useState(false)
-  const [showCategoryDescriptionDialog, setShowCategoryDescriptionDialog] =
-    React.useState(false)
-
-  const categoryDescription = React.useMemo(
-    () =>
-      patternList.filter(category =>
-        Object.values(category.patterns).includes(patternInput)
-      )[0]?.description,
-    [patternInput]
-  )
+  const openSavedGridDialog = React.useCallback(() => {
+    pauseFirst(() => setShowSavedGridDialog(true))
+  }, [pauseFirst])
 
   return (
     <>
-      <Dialog
-        closeDialog={() => setShowAboutDialog(false)}
-        showDialog={showAboutDialog}
-      >
-        <About />
-      </Dialog>
       <Dialog
         closeDialog={() => setShowSavedGridDialog(false)}
         showDialog={showSavedGridDialog}
       >
         <SavedGrid />
       </Dialog>
-      <Dialog
-        closeDialog={() => setShowCategoryDescriptionDialog(false)}
-        showDialog={showCategoryDescriptionDialog}
-      >
-        {categoryDescription}
-      </Dialog>
 
       <div className="container">
-        <AboutPrompt
-          openAboutDialog={() => pauseFirst(() => setShowAboutDialog(true))}
-        />
+        <AboutPrompt />
         <div className="flex-container">
           <div className="flex-col">
             <div className="control-container">
-              <PatternSelector
-                openPatternInfoDialog={() =>
-                  pauseFirst(() => setShowCategoryDescriptionDialog(true))
-                }
-              />
+              <PatternSelector />
             </div>
 
             <div className="control-container">
@@ -147,11 +108,7 @@ function App(): JSX.Element {
           </button>
           <button onClick={updateGame}>Update</button>
           <button onClick={newGame}>New game</button>
-          <button
-            onClick={() => pauseFirst(() => setShowSavedGridDialog(true))}
-          >
-            Save
-          </button>
+          <button onClick={openSavedGridDialog}>Save</button>
         </div>
 
         <canvas

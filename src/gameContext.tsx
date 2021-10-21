@@ -61,6 +61,7 @@ interface IGameContextValue {
   toggleAnimation: () => void
   isAnimating: boolean
   tempPause: () => void
+  pauseFirst: (callback: () => void) => void
 
   // Grid functions
   drawGrid: (grid?: TGrid) => void
@@ -132,6 +133,16 @@ export const GameContextProvider: React.FC = ({ children }) => {
       return newGrid
     }
   )
+  /** Pauses game, then runs a given function */
+  const pauseFirst = React.useCallback(
+    (callback: () => void) => {
+      if (isAnimating) {
+        toggleAnimation()
+      }
+      callback()
+    },
+    [isAnimating, toggleAnimation]
+  )
 
   const gameContextValue = {
     // Canvas properties
@@ -185,6 +196,7 @@ export const GameContextProvider: React.FC = ({ children }) => {
     toggleAnimation,
     isAnimating,
     tempPause,
+    pauseFirst,
 
     // Grid functions
     drawGrid,
