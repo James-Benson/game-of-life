@@ -1,7 +1,7 @@
 import * as React from "react"
 
 /**
- * Runs a callback at set number of frames per second, limited by number of frames your browser cn render per second
+ * Runs a callback at set number of frames per second, limited by number of frames your browser can render per second
  * @param fps
  * @param callback
  */
@@ -62,7 +62,7 @@ export function useAnimationFrame<T>(
       setReanimate(false)
       toggleAnimation()
     }
-  }, [reanimate, setReanimate, toggleAnimation])
+  }, [reanimate])
 
   return [toggleAnimation, isAnimating, tempPause]
 }

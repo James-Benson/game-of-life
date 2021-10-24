@@ -11,7 +11,7 @@ export function useStartingGrid(): void {
     cellSizeInput,
     gridSizeInput,
     setGridSizeInput,
-    currentGrid,
+    currentGridRef,
   } = React.useContext(GameContext)
 
   const newGame = useNewGame()
@@ -25,7 +25,7 @@ export function useStartingGrid(): void {
   }, [canvasRef])
 
   React.useEffect(() => {
-    if (!currentGrid.length && gridSizeInput) {
+    if (!currentGridRef.current.length && gridSizeInput) {
       newGame()
     }
   }, [gridSizeInput])

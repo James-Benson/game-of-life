@@ -36,8 +36,7 @@ interface IGameContextValue {
   customPatternInput: string
 
   // Grid properties
-  currentGrid: TGrid
-  setCurrentGrid: React.Dispatch<React.SetStateAction<TGrid>>
+  currentGridRef: React.MutableRefObject<TGrid>
   odds: number
   oddsDep: TDep<number>
   setOdds: (newState: number) => void
@@ -92,7 +91,7 @@ export const GameContextProvider: React.FC = ({ children }) => {
   const [customPatternInputControl, customPatternInput] = useInputControl("")
 
   // Grid properties
-  const [currentGrid, setCurrentGrid] = React.useState<TGrid>([[]])
+  const currentGridRef = React.useRef<TGrid>([[]])
   const [odds, oddsDep, setOdds] = useNewState(0)
   const [gridSize, gridSizeDep, setGridSize] = useNewState(0)
   const [cellSize, setCellSize] = React.useState(0)
@@ -118,11 +117,11 @@ export const GameContextProvider: React.FC = ({ children }) => {
 
   const drawGrid = useDrawGrid({
     cellSize,
-    currentGrid,
+    currentGridRef,
     gridSize,
     canvasContext,
   })
-  const updateGrid = useUpdateGrid({ currentGrid, gridSize, setCurrentGrid })
+  const updateGrid = useUpdateGrid({ currentGridRef, gridSize })
 
   // Handles playing & pausing of game
   const [toggleAnimation, isAnimating, tempPause] = useAnimationFrame<TGrid>(
@@ -171,8 +170,7 @@ export const GameContextProvider: React.FC = ({ children }) => {
     customPatternInput,
 
     // Grid properties
-    currentGrid,
-    setCurrentGrid,
+    currentGridRef,
     odds,
     oddsDep,
     setOdds,

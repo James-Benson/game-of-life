@@ -2,11 +2,10 @@ import * as React from "react"
 import { TGrid } from "../utils"
 
 export function useUpdateGrid(params: {
-  currentGrid: TGrid
+  currentGridRef: React.MutableRefObject<TGrid>
   gridSize: number
-  setCurrentGrid: React.Dispatch<React.SetStateAction<TGrid>>
 }): (grid?: TGrid) => TGrid {
-  const { currentGrid, gridSize, setCurrentGrid } = params
+  const { currentGridRef, gridSize } = params
 
   /**
    * Creates new grid based on passed grid (or currentGrid state)
@@ -15,7 +14,7 @@ export function useUpdateGrid(params: {
   const updateGrid = React.useCallback(
     (grid?: TGrid) => {
       // Can use grid state, but can be passed a grid if grid state is not up to date
-      grid = grid ?? currentGrid
+      grid = grid ?? currentGridRef.current
       const newGrid: TGrid = []
       for (let x = 0; x < gridSize; x++) {
         newGrid[x] = []
@@ -27,18 +26,19 @@ export function useUpdateGrid(params: {
               if (
                 (i !== x || j !== y) && // Ignore cell's own value
                 grid[i]?.[j] // Check neighbour is live, and not outside grid
-              )
+              ) {
                 sum++
+              }
             }
           }
           // If cell is live & has 2 live neighbours, or cell has 3 live neighbours, make cell live next cycle
           newGrid[x][y] = (grid[x][y] && sum === 2) || sum === 3
         }
       }
-      setCurrentGrid(newGrid)
+      currentGridRef.current = newGrid
       return newGrid
     },
-    [currentGrid, gridSize, setCurrentGrid]
+    [gridSize]
   )
 
   return updateGrid

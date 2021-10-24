@@ -3,17 +3,17 @@ import { TGrid } from "../utils"
 
 export function useDrawGrid(params: {
   canvasContext?: CanvasRenderingContext2D
-  currentGrid: TGrid
+  currentGridRef: React.MutableRefObject<TGrid>
   gridSize: number
   cellSize: number
 }): (grid?: TGrid) => void {
-  const { canvasContext, currentGrid, gridSize, cellSize } = params
+  const { canvasContext, currentGridRef, gridSize, cellSize } = params
 
   /** Draws passed grid (or currentGrid) onto canvas */
   const drawGrid = React.useCallback(
     (grid?: TGrid) => {
       // Can use grid state, but can be passed a grid if grid state is not up to date
-      grid = grid ?? currentGrid
+      grid = grid ?? currentGridRef.current
       if (canvasContext && grid?.[gridSize - 1]) {
         canvasContext.clearRect(0, 0, gridSize * cellSize, gridSize * cellSize)
         for (let x = 0; x < gridSize; x++) {
@@ -29,7 +29,7 @@ export function useDrawGrid(params: {
         }
       }
     },
-    [canvasContext, gridSize, cellSize, currentGrid]
+    [canvasContext, gridSize, cellSize]
   )
 
   return drawGrid

@@ -4,14 +4,14 @@ import { useCopyElementText } from "../hooks/useCopyElementText"
 import { compressGrid } from "../utils"
 
 export const SavedGrid: React.FC = () => {
-  const { currentGrid } = React.useContext(GameContext)
+  const { currentGridRef } = React.useContext(GameContext)
 
   const [savedGridElementRef, copySavedGrid] =
     useCopyElementText<HTMLParagraphElement>()
 
   const compressedGrid = React.useMemo(
-    () => compressGrid(currentGrid),
-    [currentGrid]
+    () => compressGrid(currentGridRef.current),
+    []
   )
 
   return (
