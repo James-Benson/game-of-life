@@ -6,6 +6,7 @@ import { useNewGame } from "./useNewGame"
 export function useStartingGrid(): void {
   const {
     canvasRef,
+    canvasContext,
     screenWidth,
     screenHeight,
     cellSizeInput,
@@ -14,28 +15,13 @@ export function useStartingGrid(): void {
 
   const newGame = useNewGame()
 
-  // If newGame is called as early as possible, the canvas draw is not visible
-  // Waiting for document to be ready fixes this
-  const initialiseGrid = React.useCallback(() => {
-    if (canvasRef.current && document.readyState === "complete") {
+  React.useEffect(() => {
+    if (canvasRef.current && canvasContext) {
       const controlsHeight = canvasRef.current.getBoundingClientRect().y
       const viewMin = Math.min(screenWidth, screenHeight - controlsHeight)
       const newGridSize = Math.floor(viewMin / cellSizeInput)
       setGridSizeInput(newGridSize)
       newGame(newGridSize)
     }
-  }, [
-    canvasRef,
-    screenWidth,
-    screenHeight,
-    cellSizeInput,
-    setGridSizeInput,
-    newGame,
-  ])
-
-  React.useEffect(() => {
-    document.addEventListener("readystatechange", initialiseGrid)
-    return () =>
-      document.removeEventListener("readystatechange", initialiseGrid)
-  }, [initialiseGrid])
+  }, [canvasRef.current, canvasContext])
 }

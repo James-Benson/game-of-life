@@ -27,19 +27,27 @@ export function useDrawGrid(
       const cellSize = newState?.cellSize ?? globalState.cellSize
 
       if (canvasContext && grid?.[gridSize - 1]) {
-        canvasContext.clearRect(0, 0, gridSize * cellSize, gridSize * cellSize)
-        for (let x = 0; x < gridSize; x++) {
-          for (let y = 0; y < gridSize; y++) {
-            if (grid[x][y]) {
-              canvasContext.fillRect(
-                x * cellSize,
-                y * cellSize,
-                cellSize,
-                cellSize
-              )
+        // Without this setTimeout, canvas does not appear to draw when site loads, or after clicking new/update game after changing grid/cell size
+        setTimeout(() => {
+          canvasContext.clearRect(
+            0,
+            0,
+            gridSize * cellSize,
+            gridSize * cellSize
+          )
+          for (let x = 0; x < gridSize; x++) {
+            for (let y = 0; y < gridSize; y++) {
+              if (grid[x][y]) {
+                canvasContext.fillRect(
+                  x * cellSize,
+                  y * cellSize,
+                  cellSize,
+                  cellSize
+                )
+              }
             }
           }
-        }
+        }, 0)
       }
     },
     [currentGridRef, globalState.gridSize, globalState.cellSize, canvasContext]
