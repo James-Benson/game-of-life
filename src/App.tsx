@@ -107,7 +107,7 @@ function App(): JSX.Element {
             {isAnimating ? "⏸️ Pause" : "▶️ Play"}
           </button>
           <button onClick={updateGame}>Update</button>
-          <button onClick={newGame}>New game</button>
+          <button onClick={() => newGame()}>New game</button>
           <button onClick={openSavedGridDialog}>Save</button>
         </div>
 

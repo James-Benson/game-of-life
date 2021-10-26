@@ -19,10 +19,10 @@ export function useToggleCell(): (
         const newGrid = cloneGrid(currentGridRef.current)
         newGrid[x][y] = !currentGridRef.current[x][y]
         currentGridRef.current = newGrid
-        drawGrid(newGrid)
+        drawGrid()
       }
     },
-    [canvasRef, cellSize, tempPause, drawGrid]
+    [canvasRef, cellSize, tempPause, currentGridRef, drawGrid]
   )
 
   return toggleCell

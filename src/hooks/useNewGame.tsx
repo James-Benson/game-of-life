@@ -1,10 +1,10 @@
 import * as React from "react"
 
 import { GameContext } from "../gameContext"
-import { useCreateNewGrid } from "./useCreateNewGrid"
+import { createNewGrid } from "../utils"
 
 /** Creates new game based on inputs */
-export function useNewGame(): () => void {
+export function useNewGame(): (newGridSize?: number) => void {
   const {
     oddsInput,
     cellSizeInput,
@@ -13,9 +13,7 @@ export function useNewGame(): () => void {
     patternInput,
     customPatternInput,
     currentGridRef,
-    oddsDep,
     setOdds,
-    gridSizeDep,
     setGridSize,
     setCellSize,
     setFps,
@@ -26,40 +24,50 @@ export function useNewGame(): () => void {
     drawGrid,
   } = React.useContext(GameContext)
 
-  const newGame = React.useCallback(() => {
-    setPattern(patternInput)
-    setCustomPattern(customPatternInput)
-    setOdds(oddsInput)
-    setGridSize(gridSizeInput)
-    setCellSize(cellSizeInput)
-    setFps(fpsInput)
-  }, [
-    patternInput,
-    customPatternInput,
-    oddsInput,
-    gridSizeInput,
-    cellSizeInput,
-    fpsInput,
-    setOdds,
-    setGridSize,
-    setCellSize,
-    setCustomPattern,
-    setFps,
-    setPattern,
-  ])
+  const newGame = React.useCallback(
+    (newGridSize?: number) => {
+      setPattern(patternInput)
+      setCustomPattern(customPatternInput)
+      setOdds(oddsInput)
+      setGridSize(newGridSize ?? gridSizeInput)
+      setCellSize(cellSizeInput)
+      setFps(fpsInput)
 
-  const createNewGrid = useCreateNewGrid()
+      if (isAnimating) {
+        toggleAnimation()
+      }
 
-  // Currently works by the fact that oddsDep & gridSizeDep only change when a new game is created (by user interaction, or when the site loads)
-  React.useEffect(() => {
-    if (isAnimating) {
-      toggleAnimation()
-    }
-    const newGrid = createNewGrid()
-    currentGridRef.current = newGrid
-    drawGrid()
-    // Using dependencies from useNewState, to make a new grid even if the grid properties haven't changed
-  }, [oddsDep, gridSizeDep])
+      currentGridRef.current = createNewGrid({
+        customPattern: customPatternInput,
+        gridSize: newGridSize ?? gridSizeInput,
+        odds: oddsInput,
+        pattern: patternInput,
+      })
+
+      drawGrid({
+        cellSize: cellSizeInput,
+        gridSize: newGridSize ?? gridSizeInput,
+      })
+    },
+    [
+      setPattern,
+      patternInput,
+      setCustomPattern,
+      customPatternInput,
+      setOdds,
+      oddsInput,
+      setGridSize,
+      gridSizeInput,
+      setCellSize,
+      cellSizeInput,
+      setFps,
+      fpsInput,
+      isAnimating,
+      currentGridRef,
+      drawGrid,
+      toggleAnimation,
+    ]
+  )
 
   return newGame
 }

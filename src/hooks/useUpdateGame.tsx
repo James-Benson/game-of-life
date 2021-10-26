@@ -5,10 +5,9 @@ import { GameContext } from "../gameContext"
 export function useUpdateGame(): () => void {
   const {
     cellSizeInput,
+    gridSizeInput,
     fpsInput,
-    cellSize,
     setCellSize,
-    fps,
     setFps,
     tempPause,
     drawGrid,
@@ -18,11 +17,16 @@ export function useUpdateGame(): () => void {
     tempPause()
     setCellSize(cellSizeInput)
     setFps(fpsInput)
-  }, [cellSizeInput, setCellSize, fpsInput, setFps, tempPause])
-
-  React.useEffect(() => {
-    drawGrid()
-  }, [cellSize, drawGrid, fps])
+    drawGrid({ cellSize: cellSizeInput, gridSize: gridSizeInput })
+  }, [
+    tempPause,
+    setCellSize,
+    cellSizeInput,
+    setFps,
+    fpsInput,
+    drawGrid,
+    gridSizeInput,
+  ])
 
   return updateGame
 }

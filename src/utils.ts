@@ -123,6 +123,40 @@ const decompressCells = (
   return [decompressed, row, counter, currentCell]
 }
 
+/** Returns randomly populated grid based on odds */
+const createRandomGrid = (params: {
+  gridSize: number
+  odds: number
+}): TGrid => {
+  const { gridSize, odds } = params
+  const grid: TGrid = []
+  for (let x = 0; x < gridSize; x++) {
+    grid[x] = []
+    for (let y = 0; y < gridSize; y++) {
+      grid[x][y] = Math.random() * 100 < odds
+    }
+  }
+  return grid
+}
+
+/** Returns new grid, type dependant on selected pattern */
+export const createNewGrid = (params: {
+  customPattern: string
+  gridSize: number
+  odds: number
+  pattern: string
+}): TGrid => {
+  const { customPattern, gridSize, odds, pattern } = params
+  switch (pattern) {
+    case "Random":
+      return createRandomGrid({ gridSize, odds })
+    case "Load":
+      return changeGridSize(decompressGrid(customPattern), gridSize)
+    default:
+      return changeGridSize(decompressGrid(pattern), gridSize)
+  }
+}
+
 export const patternList: IPatternCategory[] = [
   {
     name: "Still lifes",

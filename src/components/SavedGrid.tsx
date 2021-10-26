@@ -11,7 +11,7 @@ export const SavedGrid: React.FC = () => {
 
   const compressedGrid = React.useMemo(
     () => compressGrid(currentGridRef.current),
-    []
+    [currentGridRef]
   )
 
   return (

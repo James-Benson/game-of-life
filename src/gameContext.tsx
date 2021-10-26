@@ -1,8 +1,7 @@
 import * as React from "react"
 import { useAnimationFrame } from "./hooks/useAnimationFrame"
-import { useDrawGrid } from "./hooks/useDrawGrid"
+import { IDrawGridParams, useDrawGrid } from "./hooks/useDrawGrid"
 import { TControl, useInputControl } from "./hooks/useInputControl"
-import { TDep, useNewState } from "./hooks/useNewState"
 import { useUpdateGrid } from "./hooks/useUpdateGrid"
 import { useWindowSize } from "./hooks/useWindowSize"
 import { TGrid } from "./utils"
@@ -38,11 +37,9 @@ interface IGameContextValue {
   // Grid properties
   currentGridRef: React.MutableRefObject<TGrid>
   odds: number
-  oddsDep: TDep<number>
-  setOdds: (newState: number) => void
+  setOdds: React.Dispatch<React.SetStateAction<number>>
   gridSize: number
-  gridSizeDep: TDep<number>
-  setGridSize: (newState: number) => void
+  setGridSize: React.Dispatch<React.SetStateAction<number>>
   cellSize: number
   setCellSize: React.Dispatch<React.SetStateAction<number>>
   fps: number
@@ -63,8 +60,7 @@ interface IGameContextValue {
   pauseFirst: (callback: () => void) => void
 
   // Grid functions
-  drawGrid: (grid?: TGrid) => void
-  updateGrid: (grid?: TGrid) => TGrid
+  drawGrid: (newState?: IDrawGridParams) => void
 }
 
 export const GameContext = React.createContext<IGameContextValue>(
@@ -92,8 +88,8 @@ export const GameContextProvider: React.FC = ({ children }) => {
 
   // Grid properties
   const currentGridRef = React.useRef<TGrid>([[]])
-  const [odds, oddsDep, setOdds] = useNewState(0)
-  const [gridSize, gridSizeDep, setGridSize] = useNewState(0)
+  const [odds, setOdds] = React.useState(0)
+  const [gridSize, setGridSize] = React.useState(0)
   const [cellSize, setCellSize] = React.useState(0)
   const [fps, setFps] = React.useState(0)
   const [pattern, setPattern] = React.useState("Random")
@@ -121,15 +117,14 @@ export const GameContextProvider: React.FC = ({ children }) => {
     gridSize,
     canvasContext,
   })
-  const updateGrid = useUpdateGrid({ currentGridRef, gridSize })
+  const updateGrid = useUpdateGrid({ currentGridRef })
 
   // Handles playing & pausing of game
-  const [toggleAnimation, isAnimating, tempPause] = useAnimationFrame<TGrid>(
+  const [toggleAnimation, isAnimating, tempPause] = useAnimationFrame(
     fps,
-    prevGrid => {
-      const newGrid = updateGrid(prevGrid)
-      drawGrid(newGrid)
-      return newGrid
+    () => {
+      updateGrid()
+      drawGrid()
     }
   )
   /** Pauses game, then runs a given function */
@@ -172,10 +167,8 @@ export const GameContextProvider: React.FC = ({ children }) => {
     // Grid properties
     currentGridRef,
     odds,
-    oddsDep,
     setOdds,
     gridSize,
-    gridSizeDep,
     setGridSize,
     cellSize,
     setCellSize,
@@ -198,7 +191,6 @@ export const GameContextProvider: React.FC = ({ children }) => {
 
     // Grid functions
     drawGrid,
-    updateGrid,
   }
 
   return (

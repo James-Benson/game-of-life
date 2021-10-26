@@ -5,9 +5,9 @@ import * as React from "react"
  * @param fps
  * @param callback
  */
-export function useAnimationFrame<T>(
+export function useAnimationFrame(
   fps: number,
-  callback: (state?: T) => T | undefined
+  callback: () => void
 ): [() => void, boolean, () => void] {
   const animationRef = React.useRef(0)
   const prevTimeRef = React.useRef<number>()
@@ -16,39 +16,34 @@ export function useAnimationFrame<T>(
   const [reanimate, setReanimate] = React.useState(false)
 
   const animate = React.useCallback(
-    (time: number, state?: T) => {
+    (time: number) => {
       if (prevTimeRef.current) {
         const deltaTime = time - prevTimeRef.current
         countRef.current += deltaTime
         if (countRef.current > 1000 / fps) {
           countRef.current = countRef.current - 1000 / fps
-          state = callback(state)
+          callback()
         }
       } else {
         countRef.current = 0
-        state = callback(state)
+        callback()
       }
       prevTimeRef.current = time
-      animationRef.current = requestAnimationFrame(time => animate(time, state))
+      animationRef.current = requestAnimationFrame(time => animate(time))
     },
     [callback, fps]
   )
 
   /** Pauses animation if playing, plays if paused */
-  const toggleAnimation = React.useCallback(
-    (state?: T) => {
-      if (isAnimating) {
-        cancelAnimationFrame(animationRef.current)
-      } else {
-        prevTimeRef.current = undefined
-        animationRef.current = requestAnimationFrame(time =>
-          animate(time, state)
-        )
-      }
-      setIsAnimating(prev => !prev)
-    },
-    [isAnimating, animate]
-  )
+  const toggleAnimation = React.useCallback(() => {
+    if (isAnimating) {
+      cancelAnimationFrame(animationRef.current)
+    } else {
+      prevTimeRef.current = undefined
+      animationRef.current = requestAnimationFrame(time => animate(time))
+    }
+    setIsAnimating(prev => !prev)
+  }, [isAnimating, animate])
 
   /** Pauses animation, then plays after any setStates you call have applied */
   const tempPause = React.useCallback(() => {
