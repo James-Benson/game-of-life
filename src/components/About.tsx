@@ -75,9 +75,7 @@ export const About: React.FC = () => {
         </a>
       </p>
       <p>
-        <a href="/game-of-life-windows64.zip">
-          LÖVE version Windows executable
-        </a>
+        <a href="game-of-life-windows64.zip">LÖVE version Windows executable</a>
       </p>
       <p>
         This has only been tested on Windows 10, but to run the executable on
