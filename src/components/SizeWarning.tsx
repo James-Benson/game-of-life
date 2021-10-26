@@ -14,7 +14,7 @@ export const SizeWarning: React.FC = () => {
 
   const controlsHeight = React.useMemo(
     () => canvasRef.current?.getBoundingClientRect().y,
-    [canvasRef, screenHeight, screenWidth]
+    [canvasRef.current, screenHeight, screenWidth]
   )
 
   if (controlsHeight) {
