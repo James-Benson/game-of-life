@@ -18,7 +18,7 @@ type TOnChange<T extends TState> = (
 /** Control to be spread onto <input> or <select> */
 export type TControl<T extends TState> = T extends boolean
   ? { onChange: TOnChange<T>; checked: boolean }
-  : { onChange: TOnChange<T>; value: T }
+  : { onChange: TOnChange<T>; value: string }
 
 /**
  * Creates control to bind an <input> or <select> to a piece of react state
@@ -63,6 +63,7 @@ export function useInputControl<T extends TState>(
       case "boolean":
         return { onChange, checked: state } as TControl<T>
       case "number":
+        return { onChange, value: state.toString() } as TControl<T>
       case "string":
         return { onChange, value: state } as TControl<T>
     }
