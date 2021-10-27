@@ -46,7 +46,7 @@ export const SizeWarning: React.FC = () => {
           <br />
           Recommended max grid size:
           <br />
-          {screenWidth}*{screenHeight - controlsHeight}&nbsp;pixels
+          {screenWidth}*{Math.floor(screenHeight - controlsHeight)}&nbsp;pixels
         </p>
       )
     }
